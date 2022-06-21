@@ -1,8 +1,12 @@
 import streamlit as st
+from PIL import Image
 
 st.markdown("<h1 style='text-align: center; color: red;'>Punzone recognition</h1>", unsafe_allow_html=True)
 
 with st.expander("Project introduction"):
+    st.write("""
+        In this section we will write about the goal of the project and how it was carried out in brief.
+    """)
     st.write("""
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
         magna aliqua. Tellus integer feugiat scelerisque varius morbi. Praesent semper feugiat nibh sed pulvinar proin
@@ -23,6 +27,9 @@ with st.expander("Project introduction"):
 
 with st.expander("How to use"):
     st.write("""
+        Simple guide on how to use the web App and how to interpret the output. Also possible with photos or gifs.
+    """)
+    st.write("""
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
         magna aliqua. Tellus integer feugiat scelerisque varius morbi. Praesent semper feugiat nibh sed pulvinar proin
         gravida hendrerit lectus. Lacus viverra vitae congue eu consequat ac felis. Nibh sed pulvinar proin gravida
@@ -42,6 +49,10 @@ with st.expander("How to use"):
 
 with st.expander("About the dataset"):
     st.write("""
+        Briefly explain what a punch is, where they are found. It will also briefly describe how images are processed
+        before giving them as input into the neural network for prediction.
+    """)
+    st.write("""
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
         magna aliqua. Tellus integer feugiat scelerisque varius morbi. Praesent semper feugiat nibh sed pulvinar proin
         gravida hendrerit lectus. Lacus viverra vitae congue eu consequat ac felis. Nibh sed pulvinar proin gravida
@@ -60,6 +71,11 @@ with st.expander("About the dataset"):
     """)
 
 with st.expander("Prediction technique"):
+    st.write("""
+        A little more technical description of which network or networks are used for prediction.
+        Brief summary of the results obtained from the tests and then treat the accuracy of the prediction.
+        Brief description of the problems that may arise.
+    """)
     st.write("""
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
         magna aliqua. Tellus integer feugiat scelerisque varius morbi. Praesent semper feugiat nibh sed pulvinar proin
@@ -84,5 +100,5 @@ show_file = st.empty()
 if not img:
     show_file.info("Please upadate a file")
 else:
-    st.image(img, use_column_width=True)
+    st.image(Image.open(img), use_column_width=True)
     # code for create the net and predict the image
