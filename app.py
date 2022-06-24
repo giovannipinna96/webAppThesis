@@ -4,7 +4,7 @@ from PIL import Image
 from net import create_model, predictimg
 from preprocessingImg import preprocessimg
 
-st.markdown("<h1 style='text-align: center; color: red;'>Punzone recognition</h1>", unsafe_allow_html=True)
+st.markdown("""Punzone recognition""")
 # load style.css
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
