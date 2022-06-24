@@ -4,7 +4,13 @@ from PIL import Image
 from net import create_model, predictimg
 from preprocessingImg import preprocessimg
 
+# set page
+st.set_page_config(layout='wide')
+
 st.markdown("<h1 style='text-align: center; color: red;'>Punzone recognition</h1>", unsafe_allow_html=True)
+# load style.css
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 with st.expander("Project introduction"):
     st.write("""
