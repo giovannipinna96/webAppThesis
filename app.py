@@ -110,14 +110,16 @@ else:
 
     # code for create the net and predict the image
     input_model = preprocessimg(img)
-    model = create_model()
-    results = predictimg(model, input_model)
+    res, res_triplet, res_ii = create_models()
+    result_res = predict_res(res, input_model)
+    results_res_triplet = predict_res(res, input_model)
+    results_res_ii = predict_res(res, input_model)
 
     # for i in range(len(results)):
     #     st.text(
     #         f"Net prediction {i} , label : {' '.join(results[i][0].split()[1:])} \n\t\t probability : {results[i][1]}%")
 
     a1, a2, a3 = st.columns(3)
-    a1.metric("ResNet50", f'{round(results[0][1], 2)} %')
-    a2.metric("Method2", f'{round(results[1][1], 2)} %')
-    a3.metric("Method3", f'{round(results[2][1], 2)} %')
+    a1.metric("ResNet50", f'{round(result_res, 2)} %')
+    a2.metric("ResNet50 with triplet", f'{round(results_res_triplet, 2)} %')
+    a3.metric("ResNet50 with ii-loss", f'{round(results_res_ii, 2)} %')
