@@ -1,12 +1,13 @@
 import torchvision
 import torch.nn as nn
 
+
 class resNet50Costum(torchvision.models.resnet.ResNet):
     def __init__(self, num_classes):
-        super(resNet50Costum, self).__init__(torchvision.models.resnet.BasicBlock, [3, 4, 6, 3],
+        super(resNet50Costum, self).__init__(torchvision.models.resnet.Bottleneck, [3, 4, 6, 3],
                                              num_classes=num_classes)
         del self.fc
-        self.fc1 = nn.Linear(512, 32)
+        self.fc1 = nn.Linear(2048, 32)
         self.fc2 = nn.Linear(32, num_classes)
 
     def forward(self, x):
