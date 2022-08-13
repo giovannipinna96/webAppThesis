@@ -125,7 +125,7 @@ else:
 
     pred_res_ii, out_y = predict_res_ii(res_ii, threshold, mean, input_model)
     prob_res_ii = torch.nn.functional.softmax(out_y, dim=1).numpy()
-    st.write(clf.best_params_)
+    #st.write(clf.best_params_)
 
     a1, a3 = st.columns(2)
     a1.metric("ResNet50: class", f'{np.argmax(prob_res)}')
