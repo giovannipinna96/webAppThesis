@@ -87,20 +87,30 @@ with st.expander("Prediction technique"):
         implemented was ResNet50 pre-trained on ImageNet weights. In this way we could immediately understand how high
         the accuracy was achieved and what performance we could expect from similar networks.
 
-        In the training phase the data were preprocessed, we used the optimizer momentum SGD with a learning rate 
-        of 0.01, and a momentum of 0.9 and a weight decay (L2 penalty) of 5 * 10^{-4}.  Regarding loss initially we 
-        used cross entropy loss, but for more advanced techniques we it was changed. Finally, as a sheduler, which is 
-        an optimization algorithm, we chose the MultiStepLR with milestones of 50 and 75 and the gamma parameter of 
-        0.1. More information about the scheduler can be found in the official pythorch documentation. 
-        All algorithms were allied for 1000 epochs, and the results obtained will be described and commented on 
-        in the next chapter.
-
+        In the training phase the data were preprocessed, we used the optimizer RAdam with a learning rate 
+        of 0.001.  Regarding loss initially we used cross entropy loss, but for more advanced techniques we it was
+        changed. Finally, as a sheduler, which is an optimization algorithm, we chose the MultiStepLR with milestones
+        of 5 and 15 and the gamma parameter of 0.1. More information about the scheduler can be found in the official
+        Pythorch documentation. All algorithms were allied for 20 epochs.
+        
         Specifically for classification we modified the FCN of the ResNet. In fact ResNet architecture presents as 
         the last layer a fully connected of 1000 classes. This because it was designed for the 1000-class ImageNet 
         classification. This configuration for us did not fit having only 18 classes. So as is usual to do in such 
         cases we replaced that layer with another fully connected one, but one that would output only 18 classes.
 
-        The other classification technique are: … 
+        The other classification technique is the ResNet50 with the ii-loss.  In this case, the network is trained 
+        with both ii-loss and cross entropy loss. The cross entropy loss is used to train the classifier placed as 
+        the output of the network that is responsible for assigning the correct output lable to an input. While the 
+        ii-loss is used by the network to distance in the features space, which we place at 32 dimensions, the inputs. 
+        In fact, thanks to a threshold found empirically we are able to identify whether an input belongs to one of the 
+        training classes. If that input belongs to the training classes then it will pass through the classifier and be 
+        classified, otherwise it will be classified as "unknown." 
+        
+        This technique has reported encouraging results although slightly below the accuracies achieved using ResNet50 
+        alone. But this is understandable because it manages a more complex problem and perhaps with more data it would 
+        have been able to achieve higher levels of accuracy. The accuracy of this network is around 96% for 
+        classification and comes close to 70% in the task of determining whether or not an image belongs to the classes 
+        known by the network.
     """)
 
 img = st.file_uploader("Update Image")
