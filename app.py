@@ -59,9 +59,8 @@ with st.expander("About the dataset"):
         The original dataset that we have consists in 3103 images of punches of which 2476 belong to the train set, 
         while the remaining 627 to the test set. In the train set the classes range from a maximum of elements 
         (class 729) of 490 images to a minimum of 13 images (class 438), therefore with an average of elements per 
-        class equal to 145 (precisely 145.65). For the test set the classes range from a maximum of 123 elements 
-        (class 729) to a minimum of elements equal to 4 (class 438) with an average of images per class equal to 36 
-        (precisely 36.88).
+        class equal to 145. For the test set the classes range from a maximum of 123 elements 
+        (class 729) to a minimum of elements equal to 4 (class 438) with an average of images per class equal to 36.
         
         The classes of punches taken into consideration and also present in the Skahug archive  are:
         43, 72, 96, 171, 178, 274, 296, 371, 385, 385_FORSE, 391-431 (is a single label), 438, 619, 655, 657, 659, 729
