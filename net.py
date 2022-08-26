@@ -1,34 +1,50 @@
+import pickle
+
+import numpy as np
 import torch
-from torchvision.models import resnet50
+import torchvision
+
+from customResNet50 import resNet50Costum
 
 
-def create_model():
-    return resnet50(pretrained='Imagenet')
+def create_models(num_classes):
+    # create ResNet50
+    res = torchvision.models.resnet50()
+    res.fc = torch.nn.Linear(in_features=2048,
+                             out_features=num_classes,
+                             bias=True
+                             )
+    res.load_state_dict(torch.load('resnet50_augmentation.pt', map_location=torch.device('cpu')))
+
+    # create ResNet50 for triplet loss
+    res_triplet = torchvision.models.resnet50()
+    res_triplet.fc = torch.nn.Linear(in_features=2048,
+                                     out_features=64,
+                                     bias=True
+                                     )
+    res_triplet.load_state_dict(torch.load('triplet_64out_100.pt', map_location=torch.device('cpu')))
+    # load svc for triplet
+    with open("svm_triplet3", "rb") as pickle_in:
+        clf = pickle.load(pickle_in)
+    with open("sc_triplet3", "rb") as pickle_in:
+        sc = pickle.load(pickle_in)
+
+    # create ResNet50 for ii-loss, costum because has a particular strucutre
+    res_ii = resNet50Costum(num_classes)
+    res_ii.load_state_dict(torch.load('model_BEST.pt', map_location=torch.device('cpu')))
+    with open("pickle_thres_mean_iiloss2", "rb") as pickle_in:
+        thres_mean = pickle.load(pickle_in)
+    threshold = thres_mean[0]
+    mean = thres_mean[1]
+
+    return res, res_triplet, clf, sc, res_ii, threshold, mean
 
 
-def predictimg(model, input_model):
-    model.eval()
-    with torch.no_grad():
-        out = model(input_model)
+def predict_res_ii(res_ii, threshold, mean, input):
+    out_z, out_y = res_ii(input)
+    if (((mean - out_z).norm(dim=0) ** 2).min() >= threshold):
+        y_hat = np.argmax(out_y.detach().numpy())
+    else:
+        y_hat = torch.tensor(-1).numpy()
 
-    #
-    # Load the file containing the 1,000 labels for the ImageNet dataset classes
-    #
-    with open('imagenet1000_clsidx_to_labels.txt') as f:
-        labels = [line.strip() for line in f.readlines()]
-    #
-    # Find the index (tensor) corresponding to the maximum score in the out tensor.
-    # Torch.max function can be used to find the information
-    #
-    _, index = torch.max(out, 1)
-    #
-    # Find the score in terms of percentage by using torch.nn.functional.softmax function
-    # which normalizes the output to range [0,1] and multiplying by 100
-    #
-    percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
-    #
-    # Print the top 5 scores along with the image label. Sort function is invoked on the torch to sort the scores.
-    #
-    _, indices = torch.sort(out, descending=True)
-    top5 = [(labels[idx], percentage[idx].item()) for idx in indices[0][:5]]
-    return top5
+    return y_hat, out_y.detach()
