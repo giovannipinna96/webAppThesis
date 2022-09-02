@@ -121,34 +121,32 @@ if not img:
 else:
     st.image(Image.open(img), use_column_width=True)
 
+    # create dict for output lables
+    lables = {'0': '171', '1': '178_FORSE', '2': '274', '3': '296', '4': '371', '5': '385', '6': '385_FORSE', '7': '391-431', '8': '43', '9': '438',
+              '10': '619', '11': '655', '12': '657', '13': '659', '14': '72', '15': '729', '16': '96'}
     # code for create the net and predict the image
     input_model = preprocessimg(img)
-    res, res_triplet, clf, sc, res_ii, threshold, mean = create_models(17)
+    res, res_ii, threshold, threshold2, mean = create_models(17)
     res.eval()
-    #res_triplet.eval()
     res_ii.eval()
-
     pred_res = res(input_model)
     prob_res = torch.nn.functional.softmax(pred_res, dim=1).detach().numpy()
 
-    #pred_res_triplet = res_triplet(input_model).detach().numpy()
-    #prob_res_triplet = clf.predict_proba(sc.transform(pred_res_triplet))
-
-    pred_res_ii, out_y = predict_res_ii(res_ii, threshold, mean, input_model)
+    out_z, outlier_score_val, pred_res_ii, out_y = predict_res_ii(res_ii, threshold, threshold2, mean, input_model)
     prob_res_ii = torch.nn.functional.softmax(out_y, dim=1).numpy()
-    #st.write(clf.best_params_)
 
-    a1, a3 = st.columns(2)
-    a1.metric("ResNet50: class", f'{np.argmax(prob_res)}')
-    #a2.metric("ResNet50 triplet: class", f'{np.argmax(prob_res_triplet, axis=1)}')
-    if pred_res_ii == -1 or prob_res_ii.max() < 0.21:
-        a3.metric("ResNet50 ii-loss: class", 'Unknown')
+    # output ResNet50
+    a1, a2 = st.columns(2)
+    a1.metric("ResNet50: class", f'{lables.get(str(np.argmax(prob_res)))}')
+    if pred_res_ii == -1:
+        a2.metric("ResNet50 ii-loss: class", 'Unknown')
     else:
-        a3.metric("ResNet50 ii-loss: class", f'{pred_res_ii}')
-    b1, b3 = st.columns(2)
+        a2.metric("ResNet50 ii-loss: class", f'{lables.get(str(pred_res_ii))}')
+
+    # output ResNet50 + ii-loss
+    b1, b2 = st.columns(2)
     b1.metric("ResNet50: accurancy", f'{prob_res.max() * 100:3.2f} %')
-    #b2.metric("ResNet50 triplet: accurancy", f'{prob_res_triplet.max() * 100:3.2f} %')
-    if pred_res_ii == -1 or prob_res_ii.max() < 0.21:
-        b3.metric("ResNet50 ii-loss: accurancy", 'Unknown')
+    if pred_res_ii == -1:
+        b2.metric("ResNet50 ii-loss: accurancy", 'Unknown')
     else:
-        b3.metric("ResNet50 ii-loss: accurancy", f'{prob_res_ii.max() * 100:3.2f} %')
+        b2.metric("ResNet50 ii-loss: accurancy", f'{prob_res_ii.max() * 100:3.2f} %')
