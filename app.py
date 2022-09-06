@@ -145,8 +145,8 @@ else:
 
     # output ResNet50 + ii-loss
     b1, b2 = st.columns(2)
-    b1.metric("ResNet50: accurancy", f'{prob_res.max() * 100:3.2f} %')
+    b1.metric("ResNet50: confidence", f'{prob_res.max() * 100:3.2f} %')
     if pred_res_ii == -1:
-        b2.metric("ResNet50 ii-loss: accurancy", 'Unknown')
+        b2.metric("ResNet50 ii-loss: confidence", 'Unknown')
     else:
-        b2.metric("ResNet50 ii-loss: accurancy", f'{prob_res_ii.max() * 100:3.2f} %')
+        b2.metric("ResNet50 ii-loss: confidence", f'{prob_res_ii.max() * 100:3.2f} %')
